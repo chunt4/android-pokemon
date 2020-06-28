@@ -1,23 +1,25 @@
 package com.example.android_pokemon;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.content.Intent;
+//import android.content.Intent;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+//import android.view.Menu;
+//import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import java.util.*;
+//import java.util.*;
 import java.net.URL;
-import java.io.*;
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.*;
-//import com.example.android_pokemon.CustomJSONParser;
+//import java.io.*;
+//import org.json.*;
+import com.example.android_pokemon.CustomJSONParser;
+import java.io.InputStream;
+
 
 import com.example.android_pokemon.utilities.NetworkUtilities;
 
@@ -39,11 +41,11 @@ public class MainActivity extends AppCompatActivity {
         mResetButton = (Button) findViewById(R.id.reset_button);
 
 
-        // Berry[] berrynames = CustomJSONParser.BerryParse();
+        //final String[] berrynames = CustomJSONParser.BerryParse();
         final String[] berrynames = {"cheri", "chesto", "pecha", "rawst", "aspear"};
 
         for (String berry : berrynames) {
-            mSearchResultsDisplay.append("\n\n" + berry);
+            mSearchResultsDisplay.append("\n\n" + berry);//.toString());
         } // end of for
 
         final String defaultDisplayText = mSearchResultsDisplay.getText().toString();
@@ -88,45 +90,57 @@ public class MainActivity extends AppCompatActivity {
     public void makeNetworkSearchQuery(){
         // get search string
         String searchTerm = mSearchTermEditText.getText().toString();
-        // reset search results
+
+                // reset search results
         mSearchResultsDisplay.setText("Results for " + searchTerm + ":\n\n");
         // make network query
         new FetchNetworkData().execute(searchTerm);
+        mSearchResultsDisplay.append("post execute");
     } // end of makeNetworkSearchQuery
 
 
-    // inner Networking Async class
+    @SuppressLint("StaticFieldLeak")
     public class FetchNetworkData extends AsyncTask<String, Void, String> {
 
         @Override
-        protected String doInBackground(String... params) {
-            if (params.length == 0) return null;
+        protected String doInBackground(String... params){ // this is called when execute runs
+            if(params.length == 0) return null;
             String searchTerm = params[0];
 
+            mSearchResultsDisplay.append("background 1");;
             URL searchUrl = NetworkUtilities.buildBerryUrl(searchTerm);
+            mSearchResultsDisplay.append("post build");;
+
             //perform networking task
             String responseString = null;
             try {
+                mSearchResultsDisplay.append("before response");;
+
                 responseString = NetworkUtilities.getResponseFromUrl(searchUrl);
-                Log.d("info", responseString);
-            } catch (Exception e) {
+                mSearchResultsDisplay.append("url response");
+                Log.d("informational", responseString);
+            } catch (Exception e){
                 e.printStackTrace();
             }
+            mSearchResultsDisplay.append("return result");
             return responseString;
         } // end of doInBackground
 
         @Override
         protected void onPostExecute(String responseData){
             // this is invoked when the network thread finishes its networking call.
+            //String [] titles = NetworkUtilities.parseRedditJson(responseData);
+            mSearchResultsDisplay.append("post ex1");
             String[] berryInfo = NetworkUtilities.parseBerryJSON(responseData);
+            mSearchResultsDisplay.append("post ex2");
             // display news titles in GUI
-            for (String info: berryInfo){
-                mSearchResultsDisplay.append("\n\n" + info);
+            for (String ber: berryInfo){
+                mSearchResultsDisplay.append("\n\n" + ber);
             } // end for
 
         } // end of onPostExecute
 
 
+    } // end of inner class FetchNetworkData
 
-    }
 }

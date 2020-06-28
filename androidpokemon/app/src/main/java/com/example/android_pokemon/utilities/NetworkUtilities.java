@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 
+
 public class NetworkUtilities {
 
     public static URL buildBerryUrl(String searchTerm){
