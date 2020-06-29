@@ -3,6 +3,7 @@ package com.example.android_pokemon;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 //import android.content.Intent;
@@ -40,9 +41,8 @@ public class MainActivity extends AppCompatActivity {
         mSearchButton = (Button) findViewById(R.id.search_button);
         mResetButton = (Button) findViewById(R.id.reset_button);
 
-
-        //final String[] berrynames = CustomJSONParser.BerryParse();
-        final String[] berrynames = {"cheri", "chesto", "pecha", "rawst", "aspear"};
+        Context c = MainActivity.this;
+        final String[] berrynames = CustomJSONParser.BerryParse(c);
 
         for (String berry : berrynames) {
             mSearchResultsDisplay.append("\n\n" + berry);//.toString());
@@ -95,34 +95,31 @@ public class MainActivity extends AppCompatActivity {
         mSearchResultsDisplay.setText("Results for " + searchTerm + ":\n\n");
         // make network query
         new FetchNetworkData().execute(searchTerm);
-        mSearchResultsDisplay.append("post execute");
     } // end of makeNetworkSearchQuery
 
 
-    @SuppressLint("StaticFieldLeak")
-    public class FetchNetworkData extends AsyncTask<String, Void, String> {
+    //@SuppressLint("StaticFieldLeak")
+    class FetchNetworkData extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params){ // this is called when execute runs
             if(params.length == 0) return null;
             String searchTerm = params[0];
 
-            mSearchResultsDisplay.append("background 1");;
+            Log.d("debug","doInBackground searchTerm = " + searchTerm);
             URL searchUrl = NetworkUtilities.buildBerryUrl(searchTerm);
-            mSearchResultsDisplay.append("post build");;
+            Log.d("debug", "post build" + searchUrl.toString());
 
             //perform networking task
             String responseString = null;
             try {
-                mSearchResultsDisplay.append("before response");;
+                Log.d("debug","before response");
 
                 responseString = NetworkUtilities.getResponseFromUrl(searchUrl);
-                mSearchResultsDisplay.append("url response");
-                Log.d("informational", responseString);
+                Log.d("informational", "response inside doInBackGround: " + responseString);
             } catch (Exception e){
                 e.printStackTrace();
             }
-            mSearchResultsDisplay.append("return result");
             return responseString;
         } // end of doInBackground
 
@@ -130,9 +127,9 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String responseData){
             // this is invoked when the network thread finishes its networking call.
             //String [] titles = NetworkUtilities.parseRedditJson(responseData);
-            mSearchResultsDisplay.append("post ex1");
+            Log.d("debug","begin onPostExecute. responseData = " + responseData);
             String[] berryInfo = NetworkUtilities.parseBerryJSON(responseData);
-            mSearchResultsDisplay.append("post ex2");
+            Log.d("debug","exit berryJSON. berryInfo: " + berryInfo.toString());
             // display news titles in GUI
             for (String ber: berryInfo){
                 mSearchResultsDisplay.append("\n\n" + ber);

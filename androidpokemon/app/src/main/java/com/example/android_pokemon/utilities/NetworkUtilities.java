@@ -69,14 +69,22 @@ public class NetworkUtilities {
 
     public static String getResponseFromUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
+        Log.d("debug","entered getResponse");
         try{
             InputStream in = urlConnection.getInputStream();
             Scanner scanner = new Scanner(in);
             scanner.useDelimiter("\\A"); // this is an end of message delimiter
             boolean hasInput = scanner.hasNext();
-            if (hasInput) return scanner.next();
-            else return null;
+            String response = null;
+            if (hasInput){
+                response = scanner.next();
+                Log.d("debug","response = " + response.toString());
+                return response;
+            }
+            else{
+                Log.d("debug","no input");
+                return null;
+            }
         }catch(Exception e){
             e.printStackTrace();
         } finally {
