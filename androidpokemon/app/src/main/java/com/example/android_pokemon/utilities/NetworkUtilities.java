@@ -17,14 +17,14 @@ import java.util.Scanner;
 
 public class NetworkUtilities {
 
-    public static URL buildBerryUrl(String searchTerm){
+    public static URL buildBerryUrl(String searchTerm){  // creates the berry url with the berry name provided by the user
         final String baseUrl = "https://pokeapi.co/api/v2/berry/";
-        //final String endformat = ".json";
+       
         URL berryUrl = null;
-        String urlString = baseUrl +  searchTerm; //+ endformat;
+        String urlString = baseUrl +  searchTerm; 
         try{
             berryUrl = new URL(urlString);
-            Log.d("info", "URL:" + urlString);
+            
         } catch(MalformedURLException e){
             System.out.println("The url is not correctly formatted.");
             e.printStackTrace();
@@ -34,6 +34,8 @@ public class NetworkUtilities {
 
     public static String[] parseBerryJSON(String berryJSONData) {
         String[] berryData = new String[13];
+        
+        // parsing the json data and getting the key value pairs to display to the user
         try {
             JSONObject allBerrydata = new JSONObject(berryJSONData);
             berryData = new String[berryJSONData.length()];
