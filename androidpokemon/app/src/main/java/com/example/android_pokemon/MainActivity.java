@@ -57,16 +57,14 @@ public class MainActivity extends AppCompatActivity {
                         //get search string from user
                         String searchText = mSearchTermEditText.getText().toString();
 
-                        makeNetworkSearchQuery();
-
-//                        for (String berry : berrynames) {
-//                            if (berry.toLowerCase().equals(searchText.toLowerCase())) {
-//                                makeNetworkSearchQuery();
-//                                break;
-//                            } else {
-//                                mSearchResultsDisplay.setText("No results match.");
-//                            }
-//                        }
+                        for (String berry : berrynames) {
+                            if (berry.toLowerCase().equals(searchText.toLowerCase())) {
+                                makeNetworkSearchQuery();
+                                break;
+                            } else {
+                                mSearchResultsDisplay.setText("No results match.");
+                            }
+                        }
                     }
 
                 }
@@ -92,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         String searchTerm = mSearchTermEditText.getText().toString();
 
                 // reset search results
-        mSearchResultsDisplay.setText("Results for " + searchTerm + ":\n\n");
+        mSearchResultsDisplay.setText("Results for " + searchTerm + ": ");
         // make network query
         new FetchNetworkData().execute(searchTerm);
     } // end of makeNetworkSearchQuery
@@ -132,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("debug","exit berryJSON. berryInfo: " + berryInfo.toString());
             // display news titles in GUI
             for (String ber: berryInfo){
+                if (ber==null)
+                    break;
                 mSearchResultsDisplay.append("\n\n" + ber);
             } // end for
 
