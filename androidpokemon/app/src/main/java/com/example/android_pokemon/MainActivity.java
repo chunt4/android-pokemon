@@ -6,18 +6,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-//import android.content.Intent;
 import android.util.Log;
-//import android.view.Menu;
-//import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-//import java.util.*;
 import java.net.URL;
-//import java.io.*;
-//import org.json.*;
 import com.example.android_pokemon.CustomJSONParser;
 import java.io.InputStream;
 
@@ -124,13 +118,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String responseData){
             // this is invoked when the network thread finishes its networking call.
-            //String [] titles = NetworkUtilities.parseRedditJson(responseData);
             Log.d("debug","begin onPostExecute. responseData = " + responseData);
             String[] berryInfo = NetworkUtilities.parseBerryJSON(responseData);
             Log.d("debug","exit berryJSON. berryInfo: " + berryInfo.toString());
             // display news titles in GUI
             for (String ber: berryInfo){
-                if (ber==null)
+                if (ber==null) // checks to make sure no null data is displayed
                     break;
                 mSearchResultsDisplay.append("\n\n" + ber);
             } // end for
